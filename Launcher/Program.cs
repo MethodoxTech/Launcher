@@ -13,7 +13,7 @@ namespace Launcher
 
             // Open with browser
             if (path.StartsWith("http"))
-                Process.Start(path);
+                path.OpenWithDefaultProgram();
             // Launch exe
             else if (path.EndsWith(".exe"))
                 Process.Start(path, additionalArgs);
