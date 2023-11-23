@@ -51,6 +51,7 @@ namespace Launcher
                     lc --help: Print help
                     lc --open: Open configuration folder
                     lc --config: Edit configuration with default editor
+                    lc --list: List names
                     lc <Name>: Open shortcut
                     """);
             }
@@ -58,6 +59,9 @@ namespace Launcher
                 ConfigurationPath.OpenWithDefaultProgram();
             else if (args.First() == "--open")
                 ConfigurationPath.Launch();
+            else if (args.First() == "--list")
+                foreach (Shortcut item in ReadConfigurations().Values)
+                    Console.WriteLine($"{item.Name}: {item.Path}");
             else
                 Launch(args.First(), args.Skip(1).ToArray());
         }
