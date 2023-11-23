@@ -5,7 +5,8 @@ namespace Launcher
     public record Shortcut(string Name, string Path);
     public static class WindowsExplorerHelper
     {
-        public static void Launch(this string path)
+        /// <param name="additionalArgs">Reserved for launching exes</param>
+        public static void Launch(this string path, string[] additionalArgs = null)
         {
             if (!Directory.Exists(path) || !File.Exists(path))
                 throw new ArgumentException($"Invalid path: {path}");
@@ -22,15 +23,33 @@ namespace Launcher
 
     internal class Program
     {
+        #region Entrance
         static void Main(string[] args)
         {
+            if (args.Length == 0 || args.First() == "--help")
+            {
+                Console.WriteLine("""
+                    lc --help: Print help
+                    lc --config: Open configuration folder
+                    lc <Name>: Open shortcut
+                    """);
+            }
+            else if (args.First() == "--config")
+                ConfigurationFolder.Launch();
+            else
+                Launch(args.First(), args.Skip(1).ToArray());
+        }
+        #endregion
+
+        #region Routines
+        private static void Launch(string name, string[] args)
+        {
             var configurations = ReadConfigurations();
-            string name = args.First();
             if (configurations.TryGetValue(name, out Shortcut shortcut))
             {
                 try
                 {
-                    shortcut.Path.Launch();
+                    shortcut.Path.Launch(args);
                 }
                 catch (Exception e)
                 {
@@ -46,17 +65,37 @@ namespace Launcher
         }
         static Dictionary<string, Shortcut> ReadConfigurations()
         {
-            string configurationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Launcher");
-            string configurationPath = Path.Combine(configurationFolder, "Configurations.yaml");
-            Directory.CreateDirectory(configurationFolder);
-            if (!File.Exists(configurationPath))
-                File.WriteAllText(configurationPath, "# Configurations");
-
-            return File.ReadLines(configurationPath)
+            return File.ReadLines(ConfigurationPath)
                 .Where(line => !line.StartsWith('#'))
                 .Select(line => line.Split(':', StringSplitOptions.TrimEntries))
                 .Select(parts => new Shortcut(parts.First(), parts.Last()))
                 .ToDictionary(shortcut => shortcut.Name, shortcut => shortcut);
         }
+        #endregion
+
+        #region Helpers
+        public static string ConfigurationFolder
+        {
+            get
+            {
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Launcher"); ;
+                Directory.CreateDirectory(path);
+                return path;
+            }
+        }
+        public static string ConfigurationPath
+        {
+            get
+            {
+                string path = Path.Combine(ConfigurationFolder, "Configurations.yaml"); ;
+                if (!File.Exists(path))
+                    File.WriteAllText(path, """
+                        # Format: <Name>: <Path>
+                        # Configurations
+                        """);
+                return path;
+            }
+        }
+        #endregion
     }
 }
