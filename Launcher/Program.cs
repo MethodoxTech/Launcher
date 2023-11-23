@@ -8,7 +8,7 @@ namespace Launcher
         /// <param name="additionalArgs">Reserved for launching exes</param>
         public static void Launch(this string path, string[] additionalArgs = null)
         {
-            if (!Directory.Exists(path) || !File.Exists(path))
+            if (!Directory.Exists(path) && !File.Exists(path))
                 throw new ArgumentException($"Invalid path: {path}");
             else
             {
@@ -35,7 +35,7 @@ namespace Launcher
                     """);
             }
             else if (args.First() == "--config")
-                ConfigurationFolder.Launch();
+                ConfigurationPath.Launch();
             else
                 Launch(args.First(), args.Skip(1).ToArray());
         }
@@ -78,7 +78,7 @@ namespace Launcher
         {
             get
             {
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Launcher"); ;
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Launcher");
                 Directory.CreateDirectory(path);
                 return path;
             }
