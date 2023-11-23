@@ -32,4 +32,5 @@ $ArchivePath = "$ArchiveFolder\Launcher_DistributionBuild_Windows_B$Date.zip"
 New-Item -ItemType Directory -Force -Path $ArchiveFolder
 Compress-Archive -Path $PublishFolder\* -DestinationPath $ArchivePath -Force
 
+Write-Host "Publication is completed."
 Set-Location $PrevPath
