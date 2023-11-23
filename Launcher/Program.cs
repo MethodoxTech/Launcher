@@ -19,6 +19,17 @@ namespace Launcher
                 });
             }
         }
+        public static void OpenWithDefaultProgram(this string path)
+        {
+            new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = "explorer.exe",
+                    Arguments = $"\"{path}\""
+                }
+            }.Start();
+        }
     }
 
     internal class Program
@@ -30,11 +41,14 @@ namespace Launcher
             {
                 Console.WriteLine("""
                     lc --help: Print help
-                    lc --config: Open configuration folder
+                    lc --open: Open configuration folder
+                    lc --config: Edit configuration with default editor
                     lc <Name>: Open shortcut
                     """);
             }
             else if (args.First() == "--config")
+                ConfigurationPath.OpenWithDefaultProgram();
+            else if (args.First() == "--open")
                 ConfigurationPath.Launch();
             else
                 Launch(args.First(), args.Skip(1).ToArray());
