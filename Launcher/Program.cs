@@ -8,8 +8,16 @@ namespace Launcher
         /// <param name="additionalArgs">Reserved for launching exes</param>
         public static void Launch(this string path, string[] additionalArgs = null)
         {
-            if (!Directory.Exists(path) && !File.Exists(path))
+            if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
+
+            // Open with browser
+            if (path.StartsWith("http"))
+                Process.Start(path);
+            // Launch exe
+            else if (path.EndsWith(".exe"))
+                Process.Start(path, additionalArgs);
+            // Open file/folder location
             else
             {
                 Process.Start(new ProcessStartInfo
@@ -81,8 +89,13 @@ namespace Launcher
         {
             return File.ReadLines(ConfigurationPath)
                 .Where(line => !line.StartsWith('#'))
-                .Select(line => line.Split(':', StringSplitOptions.TrimEntries))
-                .Select(parts => new Shortcut(parts.First(), parts.Last()))
+                .Select(line =>
+                {
+                    int splitter = line.IndexOf(':');
+                    string name = line.Substring(0, splitter).Trim();
+                    string value = line.Substring(splitter + 1).Trim();
+                    return new Shortcut(name, value);
+                })
                 .ToDictionary(shortcut => shortcut.Name, shortcut => shortcut);
         }
         #endregion
