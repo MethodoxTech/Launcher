@@ -1,9 +1,35 @@
-﻿using System.Diagnostics;
+﻿using ConsoleTables;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Launcher
 {
-    public record Shortcut(string Name, string Path);
+    public enum ShortcutType
+    {
+        Executable,
+        DiskLocation,
+        URL
+    }
+    public record Shortcut(string Name, string Path)
+    {
+        #region Properties
+        public ShortcutType Type => GetShortcutType(Path);
+        public bool IsURL => Type == ShortcutType.URL;
+        public bool IsExecutable => Type == ShortcutType.Executable;
+        #endregion
+
+        #region Helper
+        public static ShortcutType GetShortcutType(string path)
+        {
+            if (path.StartsWith("http"))
+                return ShortcutType.URL;
+            else if (path.EndsWith(".exe"))
+                return ShortcutType.Executable;
+            else
+                return ShortcutType.DiskLocation;
+        }
+        #endregion
+    }
     public static class WindowsExplorerHelper
     {
         /// <param name="additionalArgs">Reserved for launching exes</param>
@@ -12,20 +38,26 @@ namespace Launcher
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
 
-            // Open with browser
-            if (path.StartsWith("http"))
-                path.OpenWithDefaultProgram();
-            // Launch exe
-            else if (path.EndsWith(".exe"))
-                Process.Start(path, additionalArgs);
-            // Open file/folder location
-            else
+            switch (Shortcut.GetShortcutType(path))
             {
-                Process.Start(new ProcessStartInfo
-                {
-                    Arguments = $"/select,{path}", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
-                    FileName = "explorer.exe"
-                });
+                case ShortcutType.Executable:
+                    // Launch exe
+                    Process.Start(path, additionalArgs);
+                    break;
+                case ShortcutType.DiskLocation:
+                    // Open file/folder location
+                    Process.Start(new ProcessStartInfo
+                    {
+                        Arguments = $"/select,{path}", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
+                        FileName = "explorer.exe"
+                    });
+                    break;
+                case ShortcutType.URL:
+                    // Open with browser
+                    path.OpenWithDefaultProgram();
+                    break;
+                default:
+                    break;
             }
         }
         public static void OpenWithDefaultProgram(this string path)
@@ -68,14 +100,12 @@ namespace Launcher
                 else
                 {
                     string keywords = args.Last();
-                    foreach (Shortcut item in ReadConfigurations().Values)
-                        if (Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase))
-                            Console.WriteLine($"{item.Name}: {item.Path}");
+                    PrintAsTable(ReadConfigurations().Values
+                        .Where(item => Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase)));
                 }
             }
             else if (args.First() == "--list")
-                foreach (Shortcut item in ReadConfigurations().Values)
-                    Console.WriteLine($"{item.Name}: {item.Path}");
+                PrintAsTable(ReadConfigurations().Values);
             else
                 Launch(args.First(), args.Skip(1).ToArray());
         }
@@ -119,6 +149,13 @@ namespace Launcher
         #endregion
 
         #region Helpers
+        public static void PrintAsTable(IEnumerable<Shortcut> items)
+        {
+            var table = new ConsoleTable("Name", "Type", "Path");
+            foreach (Shortcut item in items)
+                table.AddRow(item.Name, item.Type, item.Path);
+            table.Write(Format.Minimal);
+        }
         public static string ConfigurationFolder
         {
             get
