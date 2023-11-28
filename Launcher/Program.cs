@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Launcher
 {
@@ -52,6 +53,7 @@ namespace Launcher
                     lc --open: Open configuration folder
                     lc --config: Edit configuration with default editor
                     lc --list: List names
+                    lc --search <keywords>: Search names/locations containing keywords
                     lc <Name>: Open shortcut
                     """);
             }
@@ -59,6 +61,18 @@ namespace Launcher
                 ConfigurationPath.OpenWithDefaultProgram();
             else if (args.First() == "--open")
                 ConfigurationPath.Launch();
+            else if (args.First() == "--search")
+            {
+                if (args.Length != 2)
+                    Console.WriteLine("Invalid number of arguments.");
+                else
+                {
+                    string keywords = args.Last();
+                    foreach (Shortcut item in ReadConfigurations().Values)
+                        if (Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase))
+                            Console.WriteLine($"{item.Name}: {item.Path}");
+                }
+            }
             else if (args.First() == "--list")
                 foreach (Shortcut item in ReadConfigurations().Values)
                     Console.WriteLine($"{item.Name}: {item.Path}");
