@@ -81,13 +81,16 @@ namespace Launcher
             if (args.Length == 0 || args.First() == "--help")
             {
                 Console.WriteLine("""
+                    Launcher by Charles Zhang
+                      Launches shortcuts by name as defined in configuration file, for disk locations, urls, and executables.
+
                     lc --help: Print help
                     lc --dir: Open configuration folder
                     lc --config: Edit configuration with default editor
                     lc --list: List names
                     lc --search <keywords>: Search names/locations containing keywords
                     lc <Name>: Open shortcut
-                    """);
+                    """.TrimEnd());
             }
             else if (args.First().ToLower() == "--config")
                 ConfigurationPath.OpenWithDefaultProgram();
