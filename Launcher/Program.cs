@@ -82,18 +82,18 @@ namespace Launcher
             {
                 Console.WriteLine("""
                     lc --help: Print help
-                    lc --open: Open configuration folder
+                    lc --dir: Open configuration folder
                     lc --config: Edit configuration with default editor
                     lc --list: List names
                     lc --search <keywords>: Search names/locations containing keywords
                     lc <Name>: Open shortcut
                     """);
             }
-            else if (args.First() == "--config")
+            else if (args.First().ToLower() == "--config")
                 ConfigurationPath.OpenWithDefaultProgram();
-            else if (args.First() == "--open")
+            else if (args.First().ToLower() == "--dir")
                 ConfigurationPath.Launch();
-            else if (args.First() == "--search")
+            else if (args.First().ToLower() == "--search")
             {
                 if (args.Length != 2)
                     Console.WriteLine("Invalid number of arguments.");
@@ -104,8 +104,10 @@ namespace Launcher
                         .Where(item => Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase)));
                 }
             }
-            else if (args.First() == "--list")
+            else if (args.First().ToLower() == "--list")
                 PrintAsTable(ReadConfigurations().Values);
+            else if (args.First().ToLower().StartsWith("--"))
+                Console.WriteLine($"Invalid argument: {args.First()}");
             else
                 Launch(args.First(), args.Skip(1).ToArray());
         }
@@ -129,7 +131,7 @@ namespace Launcher
             }
             else
             {
-                Console.WriteLine($"Configuration {name} not found");
+                Console.WriteLine($"Shortcut {name} is not defined.");
                 Console.ReadKey();
             }
         }
