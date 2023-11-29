@@ -148,13 +148,11 @@ namespace Launcher
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    Console.ReadKey();
                 }
             }
             else
             {
                 Console.WriteLine($"Shortcut {name} is not defined.");
-                Console.ReadKey();
             }
         }
         static Dictionary<string, Shortcut> ReadConfigurations()
