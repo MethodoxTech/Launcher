@@ -8,6 +8,7 @@
     <PublishAot>true</PublishAot>
     <InvariantGlobalization>true</InvariantGlobalization>
     <AssemblyName>lc</AssemblyName>
+    <Version>0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

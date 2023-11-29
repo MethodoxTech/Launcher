@@ -84,12 +84,16 @@ namespace Launcher
                     Launcher by Charles Zhang
                       Launches shortcuts by name as defined in configuration file, for disk locations, urls, and executables.
 
-                    lc --help: Print help
-                    lc --dir: Open configuration folder
-                    lc --config: Edit configuration with default editor
-                    lc --list: List names
-                    lc --search <keywords>: Search names/locations containing keywords
-                    lc <Name>: Open shortcut
+                    Basic commands:
+                      lc --help: Print help
+                      lc --dir: Open configuration folder
+                      lc --config: Edit configuration with default editor
+                      lc --list: List names
+                      lc --search <keywords>: Search names/locations containing keywords
+                      lc <Name>: Open shortcut
+
+                    Additional commands:
+                      lc --print <Name>: Print path of shortcut (useful in shell and with other programs)
                     """.TrimEnd());
             }
             else if (args.First().ToLower() == "--config")
@@ -105,6 +109,21 @@ namespace Launcher
                     string keywords = args.Last();
                     PrintAsTable(ReadConfigurations().Values
                         .Where(item => Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase)));
+                }
+            }
+            else if (args.First().ToLower() == "--print")
+            {
+                if (args.Length != 2)
+                    Console.WriteLine("Invalid number of arguments.");
+                else
+                {
+                    string name = args.Last();
+                    Shortcut item = ReadConfigurations().Values
+                        .SingleOrDefault(item => item.Name == name);
+                    if (item == null)
+                        Console.WriteLine($"{name} is not defined.");
+                    else
+                    Console.WriteLine(item.Path);
                 }
             }
             else if (args.First().ToLower() == "--list")
