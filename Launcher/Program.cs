@@ -78,7 +78,7 @@ namespace Launcher
         #region Entrance
         static void Main(string[] args)
         {
-            if (args.Length == 0 || args.First() == "--help")
+            if (args.Length == 0 || args.First() == "--help" || args.First() == "-h")
             {
                 Console.WriteLine("""
                     Launcher by Charles Zhang
@@ -96,11 +96,11 @@ namespace Launcher
                       lc --print <Name>: Print path of shortcut (useful in shell and with other programs)
                     """.TrimEnd());
             }
-            else if (args.First().ToLower() == "--config")
+            else if (args.First().ToLower() == "--config" || args.First().ToLower() == "-c")
                 ConfigurationPath.OpenWithDefaultProgram();
-            else if (args.First().ToLower() == "--dir")
+            else if (args.First().ToLower() == "--dir" || args.First().ToLower() == "-d")
                 ConfigurationPath.Launch();
-            else if (args.First().ToLower() == "--search")
+            else if (args.First().ToLower() == "--search" || args.First().ToLower() == "-s")
             {
                 if (args.Length != 2)
                     Console.WriteLine("Invalid number of arguments.");
@@ -111,7 +111,7 @@ namespace Launcher
                         .Where(item => Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase)));
                 }
             }
-            else if (args.First().ToLower() == "--print")
+            else if (args.First().ToLower() == "--print" || args.First().ToLower() == "-p")
             {
                 if (args.Length != 2)
                     Console.WriteLine("Invalid number of arguments.");
@@ -126,9 +126,9 @@ namespace Launcher
                     Console.WriteLine(item.Path);
                 }
             }
-            else if (args.First().ToLower() == "--list")
+            else if (args.First().ToLower() == "--list" || args.First().ToLower() == "-l")
                 PrintAsTable(ReadConfigurations().Values);
-            else if (args.First().ToLower().StartsWith("--"))
+            else if (args.First().ToLower().StartsWith("--") || args.First().ToLower().StartsWith("-"))
                 Console.WriteLine($"Invalid argument: {args.First()}");
             else
                 Launch(args.First(), args.Skip(1).ToArray());
