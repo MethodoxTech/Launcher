@@ -11,3 +11,4 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 
 * v0.1.0: Functional release.
 * v0.1.1: Add `--print`.
+* v0.1.2: Add `--edit` as alias to `--config`; Provides `-` type shortcuts to long `--` type command names.

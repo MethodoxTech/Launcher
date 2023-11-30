@@ -96,7 +96,8 @@ namespace Launcher
                       lc --print <Name>: Print path of shortcut (useful in shell and with other programs)
                     """.TrimEnd());
             }
-            else if (args.First().ToLower() == "--config" || args.First().ToLower() == "-c")
+            else if (args.First().ToLower() == "--config" || args.First().ToLower() == "-c"
+                || args.First().ToLower() == "--edit" || args.First().ToLower() == "-e")
                 ConfigurationPath.OpenWithDefaultProgram();
             else if (args.First().ToLower() == "--dir" || args.First().ToLower() == "-d")
                 ConfigurationPath.Launch();
