@@ -33,7 +33,7 @@ namespace Launcher
     public static class WindowsExplorerHelper
     {
         /// <param name="additionalArgs">Reserved for launching exes</param>
-        public static void Launch(this string path, string[] additionalArgs = null)
+        public static void Launch(this string path, string[] additionalArgs = null, bool launchWithDefaultProgram = false)
         {
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
@@ -45,31 +45,40 @@ namespace Launcher
                     Process.Start(path, additionalArgs);
                     break;
                 case ShortcutType.DiskLocation:
-                    // Open file/folder location
-                    Process.Start(new ProcessStartInfo
-                    {
-                        Arguments = $"/select,{path}", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
-                        FileName = "explorer.exe"
-                    });
+                    if (launchWithDefaultProgram)
+                        // Open with default program
+                        path.OpenWithDefaultProgram(additionalArgs);
+                    else
+                        // Open file/folder location
+                        Process.Start(new ProcessStartInfo
+                        {
+                            Arguments = $"/select,{path}", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
+                            FileName = "explorer.exe"
+                        });
                     break;
                 case ShortcutType.URL:
                     // Open with browser
-                    path.OpenWithDefaultProgram();
+                    path.OpenWithDefaultProgram(additionalArgs);
                     break;
                 default:
                     break;
             }
         }
-        public static void OpenWithDefaultProgram(this string path)
+        public static void OpenWithDefaultProgram(this string path, string[] additionalArgs)
         {
             new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = "explorer.exe",
-                    Arguments = $"\"{path}\""
+                    Arguments = additionalArgs == null
+                        ? $"\"{path}\""
+                        : $"\"{path}\" {EscapeArguments(additionalArgs)}"
                 }
             }.Start();
+
+            string EscapeArguments(string[] arguments)
+                => string.Join(" ", arguments.Select(argument => argument.Contains(' ') ? $"\"{argument}\"" : argument));
         }
     }
 
@@ -90,15 +99,16 @@ namespace Launcher
                       lc --config: Edit configuration with default editor
                       lc --list: List names
                       lc --search <keywords>: Search names/locations containing keywords
-                      lc <Name>: Open shortcut
+                      lc <Name> [<Arguments>...]: Open shortcut
 
                     Additional commands:
                       lc --print <Name>: Print path of shortcut (useful in shell and with other programs)
+                      lc --open <Name> [<Arguments>...]: Open file with default program; Open other links with browser
                     """.TrimEnd());
             }
             else if (args.First().ToLower() == "--config" || args.First().ToLower() == "-c"
                 || args.First().ToLower() == "--edit" || args.First().ToLower() == "-e")
-                ConfigurationPath.OpenWithDefaultProgram();
+                ConfigurationPath.OpenWithDefaultProgram(null);
             else if (args.First().ToLower() == "--dir" || args.First().ToLower() == "-d")
                 ConfigurationPath.Launch();
             else if (args.First().ToLower() == "--search" || args.First().ToLower() == "-s")
@@ -129,22 +139,24 @@ namespace Launcher
             }
             else if (args.First().ToLower() == "--list" || args.First().ToLower() == "-l")
                 PrintAsTable(ReadConfigurations().Values);
+            else if (args.First().ToLower() == "--open" || args.First().ToLower() == "-o")
+                Launch(args.First(), args.Skip(1).ToArray(), true);
             else if (args.First().ToLower().StartsWith("--") || args.First().ToLower().StartsWith("-"))
                 Console.WriteLine($"Invalid argument: {args.First()}");
             else
-                Launch(args.First(), args.Skip(1).ToArray());
+                Launch(args.First(), args.Skip(1).ToArray(), false);
         }
         #endregion
 
         #region Routines
-        private static void Launch(string name, string[] args)
+        private static void Launch(string name, string[] args, bool launchWithDefaultProgram)
         {
             var configurations = ReadConfigurations();
             if (configurations.TryGetValue(name, out Shortcut shortcut))
             {
                 try
                 {
-                    shortcut.Path.Launch(args);
+                    shortcut.Path.Launch(args, launchWithDefaultProgram);
                 }
                 catch (Exception e)
                 {
