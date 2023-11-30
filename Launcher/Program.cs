@@ -171,7 +171,7 @@ namespace Launcher
         static Dictionary<string, Shortcut> ReadConfigurations()
         {
             return File.ReadLines(ConfigurationPath)
-                .Where(line => !line.StartsWith('#'))
+                .Where(line => !line.StartsWith('#') && !string.IsNullOrWhiteSpace(line))   // Skip comment and empty lines
                 .Select(line =>
                 {
                     int splitter = line.IndexOf(':');
