@@ -38,6 +38,7 @@ namespace Launcher
             // Verbatim commands
             if (path.StartsWith('!'))
             {
+                path = path[1..];
                 string filename = path.Split(' ').First(); // TODO: Handle with the case that there are spaces in the filename
                 string arguments = path[filename.Length..];
                 Process.Start(filename, arguments);
