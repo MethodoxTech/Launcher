@@ -35,6 +35,14 @@ namespace Launcher
         /// <param name="additionalArgs">Reserved for launching exes</param>
         public static void Launch(this string path, string[] additionalArgs = null, bool launchWithDefaultProgram = false)
         {
+            // Verbatim commands
+            if (path.StartsWith('!'))
+            {
+                string filename = path.Split(' ').First(); // TODO: Handle with the case that there are spaces in the filename
+                string arguments = path[filename.Length..];
+                Process.Start(filename, arguments);
+            }
+
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
 
@@ -208,6 +216,9 @@ namespace Launcher
                 if (!File.Exists(path))
                     File.WriteAllText(path, """
                         # Format: <Name>: <Path>
+                        # Notes:
+                        #   Use ! to start verbatim
+
                         # Configurations
                         """);
                 return path;
