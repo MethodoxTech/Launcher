@@ -39,9 +39,20 @@ namespace Launcher
             if (path.StartsWith('!'))
             {
                 path = path[1..];
+                bool captureOutputs = false;
+                if (path.StartsWith('?'))
+                {
+                    path = path[1..];
+                    captureOutputs = true;
+                }
+
                 string filename = path.Split(' ').First(); // TODO: Handle with the case that there are spaces in the filename
                 string arguments = path[filename.Length..];
-                Process.Start(filename, arguments);
+                if (captureOutputs)
+                    MonitorProcess(filename, arguments);
+                else
+                    Process.Start(filename, arguments);
+                return;
             }
 
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
@@ -88,6 +99,35 @@ namespace Launcher
 
             string EscapeArguments(string[] arguments)
                 => string.Join(" ", arguments.Select(argument => argument.Contains(' ') ? $"\"{argument}\"" : argument));
+        }
+        private static void MonitorProcess(string filename, string arguments)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = filename,
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardInput = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                },
+                EnableRaisingEvents = true,
+            };
+            process.ErrorDataReceived += OutputDataReceived;
+            process.OutputDataReceived += OutputDataReceived;
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+
+            static void OutputDataReceived(object sender, DataReceivedEventArgs e)
+            {
+                string message = e.Data;
+                Console.WriteLine(message);
+            }
         }
     }
 
@@ -219,6 +259,7 @@ namespace Launcher
                         # Format: <Name>: <Path>
                         # Notes:
                         #   Use ! to start verbatim
+                        #   Use !? to monitor process outputs
 
                         # Configurations
                         """);
