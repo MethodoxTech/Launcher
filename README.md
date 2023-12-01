@@ -18,3 +18,5 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 * v0.1.1: Add `--print`.
 * v0.1.2: Add `--edit` as alias to `--config`; Provides `-` type shortcuts to long `--` type command names.
 * v0.1.3: Add `--open`.
+* v0.1.4: Surpport verbatim paths.
+* v0.1.5: Add `--create` command; Remove `--config`, use `--edit` instead.

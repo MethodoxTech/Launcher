@@ -145,7 +145,8 @@ namespace Launcher
                     Basic commands:
                       lc --help: Print help
                       lc --dir: Open configuration folder
-                      lc --config: Edit configuration with default editor
+                      lc --edit: Edit configuration with default editor
+                      lc --create: Create or update existing entries (partially implemented)
                       lc --list: List names
                       lc --search <keywords>: Search names/locations containing keywords
                       lc <Name> [<Arguments>...]: Open shortcut
@@ -155,8 +156,9 @@ namespace Launcher
                       lc --open <Name> [<Arguments>...]: Open file with default program; Open other links with browser
                     """.TrimEnd());
             }
-            else if (args.First().ToLower() == "--config" || args.First().ToLower() == "-c"
-                || args.First().ToLower() == "--edit" || args.First().ToLower() == "-e")
+            else if (args.First().ToLower() == "--create" || args.First().ToLower() == "-c")
+                File.AppendAllText(ConfigurationPath, $"\n{args[1]}: {args[2]}");
+            else if (args.First().ToLower() == "--edit" || args.First().ToLower() == "-e")
                 ConfigurationPath.OpenWithDefaultProgram(null);
             else if (args.First().ToLower() == "--dir" || args.First().ToLower() == "-d")
                 ConfigurationPath.Launch();
