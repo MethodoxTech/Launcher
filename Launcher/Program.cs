@@ -8,7 +8,8 @@ namespace Launcher
     {
         Executable,
         DiskLocation,
-        URL
+        URL,
+        Verbatim
     }
     public record Shortcut(string Name, string Path)
     {
@@ -21,7 +22,9 @@ namespace Launcher
         #region Helper
         public static ShortcutType GetShortcutType(string path)
         {
-            if (path.StartsWith("http"))
+            if (path.StartsWith("!"))
+                return ShortcutType.Verbatim;
+            else if (path.StartsWith("http"))
                 return ShortcutType.URL;
             else if (path.EndsWith(".exe"))
                 return ShortcutType.Executable;
@@ -58,7 +61,8 @@ namespace Launcher
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
 
-            switch (Shortcut.GetShortcutType(path))
+            var shortcutType = Shortcut.GetShortcutType(path);
+            switch (shortcutType)
             {
                 case ShortcutType.Executable:
                     // Launch exe
@@ -81,6 +85,7 @@ namespace Launcher
                     path.OpenWithDefaultProgram(additionalArgs);
                     break;
                 default:
+                    Console.WriteLine($"Unexpected shortcut type: {shortcutType}");
                     break;
             }
         }
