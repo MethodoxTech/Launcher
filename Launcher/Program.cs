@@ -148,7 +148,7 @@ namespace Launcher
             else if (args.First().ToLower() == "--list" || args.First().ToLower() == "-l")
                 PrintAsTable(ReadConfigurations().Values);
             else if (args.First().ToLower() == "--open" || args.First().ToLower() == "-o")
-                Launch(args.First(), args.Skip(1).ToArray(), true);
+                Launch(args[1], args.Skip(2).ToArray(), true);
             else if (args.First().ToLower().StartsWith("--") || args.First().ToLower().StartsWith("-"))
                 Console.WriteLine($"Invalid argument: {args.First()}");
             else
