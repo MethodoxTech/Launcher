@@ -11,6 +11,7 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 
 - [ ] Support comments on link items (not urgent).
 - [ ] Support in-place arguments on link items (aka. so we don't always need to take from CLI use) (not urgent); This is non-trivial architectural change and may complicate code.
+- [ ] (CLI, GUI) Add simple `--interactive/-i` mode which allows picking targets interactively. Occassionally useful when we are lazy. It should be a TUI-like interface.
 
 ## Version Changelog
 
