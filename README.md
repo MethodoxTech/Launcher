@@ -21,3 +21,9 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 * v0.1.3: Add `--open`.
 * v0.1.4: Surpport verbatim paths.
 * v0.1.5: Add `--create` command; Remove `--config`, use `--edit` instead.
+
+## Dated Notes
+
+### 20240111
+
+This is an inspirational quick-shot implementation of a specific idea - and it works very well! So far it's been very helpful and I can confirm that this kind of manual configuration based on workload (even though we could, we don't need to sync the configurations cross different work stations) is workload-specific, and easy to use.
