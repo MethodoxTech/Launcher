@@ -1,5 +1,7 @@
 # Launcher
 
+THIS CODE IS CROSS-PLATFORM COMPLIANT IN THE SENSE THAT IT DOESN'T USE ANY WINDOWS SPECIFIC API; HOWEVER, IT UTILIZES explorer.exe TO OPEN DISK LOCATIONS WHICH IS ONLY APPLICABLE ON WINDOWS.
+
 Think of this as a self-contained version of Rainmeter gadget designed just for launching stuff.
 This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 
@@ -12,6 +14,7 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 - [ ] Support comments on link items (not urgent).
 - [ ] Support in-place arguments on link items (aka. so we don't always need to take from CLI use) (not urgent); This is non-trivial architectural change and may complicate code.
 - [ ] (CLI, GUI) Add simple `--interactive/-i` mode which allows picking targets interactively. Occassionally useful when we are lazy. It should be a TUI-like interface.
+- [ ] Add unit test to test parsing of various file paths
 
 ## Version Changelog
 
@@ -21,6 +24,7 @@ This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 * v0.1.3: Add `--open`.
 * v0.1.4: Surpport verbatim paths.
 * v0.1.5: Add `--create` command; Remove `--config`, use `--edit` instead.
+* v0.1.6: Fix issue with parsing folder paths with spaces when opening from explorer.
 
 ## Dated Notes
 
