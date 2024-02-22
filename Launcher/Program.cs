@@ -49,12 +49,12 @@ namespace Launcher
                     captureOutputs = true;
                 }
 
-                string filename = path.Split(' ').First(); // TODO: Handle with the case that there are spaces in the filename
-                string arguments = path[filename.Length..];
+                string programName = path.Split(' ').First(); // TODO: Handle with the case that there are spaces in the programName
+                string arguments = path[programName.Length..];
                 if (captureOutputs)
-                    MonitorProcess(filename, arguments);
+                    MonitorProcess(programName, arguments);
                 else
-                    Process.Start(filename, arguments);
+                    Process.Start(programName, arguments);
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace Launcher
                         // Open file/folder location
                         Process.Start(new ProcessStartInfo
                         {
-                            Arguments = $"/select,{path}", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
+                            Arguments = $"/select,\"{path}\"", // Explorer will treat everything after /select as a path, so no quotes is necessasry and in fact, we shouldn't use quotes otherwise explorer will not work
                             FileName = "explorer.exe"
                         });
                     break;
@@ -136,7 +136,7 @@ namespace Launcher
         }
     }
 
-    internal class Program
+    internal static class Program
     {
         #region Entrance
         static void Main(string[] args)
@@ -162,11 +162,11 @@ namespace Launcher
                     """.TrimEnd());
             }
             else if (args.First().ToLower() == "--create" || args.First().ToLower() == "-c")
-                File.AppendAllText(ConfigurationPath, $"\n{args[1]}: {args[2]}");
+                File.AppendAllText(Launcher.ConfigurationPath, $"\n{args[1]}: {args[2]}");
             else if (args.First().ToLower() == "--edit" || args.First().ToLower() == "-e")
-                ConfigurationPath.OpenWithDefaultProgram(null);
+                Launcher.ConfigurationPath.OpenWithDefaultProgram(null);
             else if (args.First().ToLower() == "--dir" || args.First().ToLower() == "-d")
-                ConfigurationPath.Launch();
+                Launcher.ConfigurationPath.Launch();
             else if (args.First().ToLower() == "--search" || args.First().ToLower() == "-s")
             {
                 if (args.Length != 2)
@@ -174,7 +174,7 @@ namespace Launcher
                 else
                 {
                     string keywords = args.Last();
-                    PrintAsTable(ReadConfigurations().Values
+                    Launcher.PrintAsTable(Launcher.ReadConfigurations().Values
                         .Where(item => Regex.IsMatch(item.Name, keywords, RegexOptions.IgnoreCase) || Regex.IsMatch(item.Path, keywords, RegexOptions.IgnoreCase)));
                 }
             }
@@ -185,7 +185,7 @@ namespace Launcher
                 else
                 {
                     string name = args.Last();
-                    Shortcut item = ReadConfigurations().Values
+                    Shortcut item = Launcher.ReadConfigurations().Values
                         .SingleOrDefault(item => item.Name == name);
                     if (item == null)
                         Console.WriteLine($"{name} is not defined.");
@@ -194,18 +194,21 @@ namespace Launcher
                 }
             }
             else if (args.First().ToLower() == "--list" || args.First().ToLower() == "-l")
-                PrintAsTable(ReadConfigurations().Values);
+                Launcher.PrintAsTable(Launcher.ReadConfigurations().Values);
             else if (args.First().ToLower() == "--open" || args.First().ToLower() == "-o")
-                Launch(args[1], args.Skip(2).ToArray(), true);
+                Launcher.Launch(args[1], args.Skip(2).ToArray(), true);
             else if (args.First().ToLower().StartsWith("--") || args.First().ToLower().StartsWith("-"))
                 Console.WriteLine($"Invalid argument: {args.First()}");
             else
-                Launch(args.First(), args.Skip(1).ToArray(), false);
+                Launcher.Launch(args.First(), args.Skip(1).ToArray(), false);
         }
         #endregion
+    }
 
+    public static class Launcher
+    {
         #region Routines
-        private static void Launch(string name, string[] args, bool launchWithDefaultProgram)
+        public static void Launch(string name, string[] args, bool launchWithDefaultProgram)
         {
             var configurations = ReadConfigurations();
             if (configurations.TryGetValue(name, out Shortcut shortcut))
@@ -224,22 +227,23 @@ namespace Launcher
                 Console.WriteLine($"Shortcut {name} is not defined.");
             }
         }
-        static Dictionary<string, Shortcut> ReadConfigurations()
+        public static Dictionary<string, Shortcut> ReadConfigurations()
         {
             return File.ReadLines(ConfigurationPath)
                 .Where(line => !line.StartsWith('#') && !string.IsNullOrWhiteSpace(line))   // Skip comment and empty lines
-                .Select(line =>
-                {
-                    int splitter = line.IndexOf(':');
-                    string name = line.Substring(0, splitter).Trim();
-                    string value = line.Substring(splitter + 1).Trim();
-                    return new Shortcut(name, value);
-                })
+                .Select(ParseShortcut)
                 .ToDictionary(shortcut => shortcut.Name, shortcut => shortcut);
         }
         #endregion
 
         #region Helpers
+        public static Shortcut ParseShortcut(string line)
+        {
+            int splitter = line.IndexOf(':');
+            string name = line.Substring(0, splitter).Trim();
+            string value = line.Substring(splitter + 1).Trim();
+            return new Shortcut(name, value.Trim('\"'));
+        }
         public static void PrintAsTable(IEnumerable<Shortcut> items)
         {
             var table = new ConsoleTable("Name", "Type", "Path");
