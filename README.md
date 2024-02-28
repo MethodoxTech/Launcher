@@ -4,10 +4,16 @@ THIS CODE IS CROSS-PLATFORM COMPLIANT IN THE SENSE THAT IT DOESN'T USE ANY WINDO
 
 Think of this as a self-contained version of Rainmeter gadget designed just for launching stuff.
 This is way faster and non-intrusive than Rainmeter when added to `PATH`.
+You can also think of it as an extended version of "task bar".
 
 * Open exe with arguments
 * Open file/folder location
 * Open website
+
+## Setup
+
+You need to make sure you have default text editor for .yaml file, otherwise you might encounter "Application Not Found" error on Windows.
+For using with Visual Studio Code, you probably want to expose `%UserProfile%\AppData\Local\Programs\Microsoft VS Code` instead of `%UserProfile%\AppData\Local\Programs\Microsoft VS Code\bin` which is the default (the latter contains cmd scripts instead of actual executables which will be an issue when Launcher tries to launch the process).
 
 ## TODO
 
