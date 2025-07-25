@@ -61,6 +61,10 @@ namespace BigWhiteDot
             // Launch edit
             global::Launcher.Launcher.ConfigurationPath.OpenWithDefaultProgram(null);
         }
+        private void ExitMenuItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            Close();
+        }
         #endregion
 
         #region Routines

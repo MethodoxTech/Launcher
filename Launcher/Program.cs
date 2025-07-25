@@ -61,7 +61,7 @@ namespace Launcher
             if (!Directory.Exists(path) && !File.Exists(path) && !path.StartsWith("http"))
                 throw new ArgumentException($"Invalid path: {path}");
 
-            var shortcutType = Shortcut.GetShortcutType(path);
+            ShortcutType shortcutType = Shortcut.GetShortcutType(path);
             switch (shortcutType)
             {
                 case ShortcutType.Executable:
@@ -107,7 +107,7 @@ namespace Launcher
         }
         private static void MonitorProcess(string filename, string arguments)
         {
-            var process = new Process()
+            Process process = new()
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -210,7 +210,7 @@ namespace Launcher
         #region Routines
         public static void Launch(string name, string[] args, bool launchWithDefaultProgram)
         {
-            var configurations = ReadConfigurations();
+            Dictionary<string, Shortcut> configurations = ReadConfigurations();
             if (configurations.TryGetValue(name, out Shortcut shortcut))
             {
                 try
@@ -246,7 +246,7 @@ namespace Launcher
         }
         public static void PrintAsTable(IEnumerable<Shortcut> items)
         {
-            var table = new ConsoleTable("Name", "Type", "Path");
+            ConsoleTable table = new("Name", "Type", "Path");
             foreach (Shortcut item in items)
                 table.AddRow(item.Name, item.Type, item.Path);
             table.Write(Format.Minimal);
