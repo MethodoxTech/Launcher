@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Launcher;
+using Launcher.Shared;
 using System;
 using System.Collections.Generic;
 
@@ -98,7 +99,7 @@ namespace BigWhiteDot
         private void Border_DoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
         {
             // Launch edit
-            global::Launcher.Launcher.ConfigurationPath.OpenWithDefaultProgram(null);
+            LauncherCore.ConfigurationPath.OpenWithDefaultProgram(null);
         }
         private void HideMenuItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
             => Hide();
@@ -151,7 +152,7 @@ namespace BigWhiteDot
             {
                 Menu = []
             };
-            Dictionary<string, Shortcut> configs = global::Launcher.Launcher.ReadConfigurations();
+            Dictionary<string, Shortcut> configs = LauncherCore.ReadConfigurations();
             if (configs.Count > 0)
             {
                 foreach (KeyValuePair<string, Shortcut> kv in configs)
@@ -226,7 +227,7 @@ namespace BigWhiteDot
 
             // Favorites menu (all configured shortcuts)
             FavoritesMenu.Items.Clear();
-            Dictionary<string, Shortcut> configs = global::Launcher.Launcher.ReadConfigurations();
+            Dictionary<string, Shortcut> configs = LauncherCore.ReadConfigurations();
             foreach (KeyValuePair<string, Shortcut> kv in configs)
             {
                 string name = kv.Key;
@@ -272,9 +273,9 @@ namespace BigWhiteDot
             // Launch
             try
             {
-                if (global::Launcher.Launcher.ReadConfigurations().ContainsKey(nameOrPath))
+                if (LauncherCore.ReadConfigurations().ContainsKey(nameOrPath))
                     // Treat as shortcut name
-                    global::Launcher.Launcher.Launch(nameOrPath, args ?? Array.Empty<string>(), useDefaultProgram);
+                    LauncherCore.Launch(nameOrPath, args ?? Array.Empty<string>(), useDefaultProgram);
                 else
                     // Treat as literal path/url
                     nameOrPath.Launch(args ?? Array.Empty<string>(), useDefaultProgram);

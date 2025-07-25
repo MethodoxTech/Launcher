@@ -1,3 +1,5 @@
+using Launcher.Shared;
+
 namespace LauncherUnitTests
 {
     public class ConfigurationParsingTests
@@ -5,8 +7,8 @@ namespace LauncherUnitTests
         [Fact]
         public void ShouldBeAbleToRecognizeVariousPatterns()
         {
-            Assert.Equal(Launcher.ShortcutType.Verbatim, Launcher.Launcher.ParseShortcut(@"workspace: !code ""C:\My Folder\My Subfolder""").Type);
-            Assert.Equal(Launcher.ShortcutType.DiskLocation, Launcher.Launcher.ParseShortcut(@"folder: C:\My Folder\My Subfolder").Type);
+            Assert.Equal(ShortcutType.Verbatim, LauncherCore.ParseShortcut(@"workspace: !code ""C:\My Folder\My Subfolder""").Type);
+            Assert.Equal(ShortcutType.DiskLocation, LauncherCore.ParseShortcut(@"folder: C:\My Folder\My Subfolder").Type);
         }
     }
 }

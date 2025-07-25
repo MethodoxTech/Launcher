@@ -7,6 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Version>0.1.5</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Folder.png" />
@@ -29,6 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Launcher\Launcher.csproj" />
+    <ProjectReference Include="..\Launcher.Shared\Launcher.Shared.csproj" />
   </ItemGroup>
 </Project>
