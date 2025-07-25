@@ -136,7 +136,7 @@ namespace Launcher
         }
     }
 
-    internal static class Program
+    public static class Program
     {
         #region Entrance
         static void Main(string[] args)

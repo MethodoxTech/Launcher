@@ -24,7 +24,15 @@
         </Style>
 
     </Window.Styles>
-    <Border Classes="dot" Background="Gray" Width="30" Height="30" CornerRadius="15" PointerPressed="Border_PointerPressed">
+    <Border Classes="dot" Background="Gray" Width="30" Height="30" CornerRadius="15" PointerReleased="Border_PointerReleased" DoubleTapped="Border_DoubleTapped" ContextRequested="Border_ContextRequested">
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Recent" Name="RecentMenu"/>
+                <MenuItem Header="Favorites" Name="FavoritesMenu"/>
+                <MenuItem Header="File System" Name="FileSystemMenu"/>
+                <MenuItem Header="Everything" IsVisible="False" Name="EverythingMenu"/>
+            </ContextMenu>
+        </Border.ContextMenu>
         <Border Classes="dot" Background="White" Width="15" Height="15" CornerRadius="15" Margin="5"/>
     </Border>
 </Window>
