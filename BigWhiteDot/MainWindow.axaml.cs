@@ -33,44 +33,13 @@ namespace BigWhiteDot
             _trayIcon = new TrayIcon
             {
                 Icon = new WindowIcon(new Bitmap(AssetLoader.Open(new Uri("avares://BigWhiteDot/Assets/Icon.ico")))),
-                ToolTipText = "Show Big White Dot",
+                ToolTipText = "Big White Dot"
             };
 
-            // Build a native menu
-            NativeMenu menu = [];
+            // Build it once at startup
+            _trayIcon.Menu = BuildTrayMenu();
 
-            // "Recent" submenu
-            NativeMenuItem recentSub = new("Recent") { Menu = [] };
-            // Example: populate with a couple of dummy entries
-            foreach (string? name in new[] { "Foo", "Bar" })
-            {
-                NativeMenuItem item = new(name);
-                item.Click += (s, e) =>
-                {
-                    // your LaunchAndRecord(name) logic here
-                    Console.WriteLine($"Launch {name}");
-                };
-                recentSub.Menu.Items.Add(item);
-            }
-            menu.Items.Add(recentSub);
-
-            // "Exit"
-            NativeMenuItem exitItem = new("Exit");
-            exitItem.Click += (s, e) =>
-            {
-                // allow the window to really close, then shut down
-                _reallyClosing = true;
-                Close();
-                if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d)
-                    d.Shutdown();
-            };
-            menu.Items.Add(exitItem);
-
-            // Wire it up
-            _trayIcon.Menu = menu;
-            TrayIcon.SetIcons(Application.Current, [_trayIcon]);
-
-            // Click‑to‑toggle visibility
+            // Register toggle‐window handler
             _trayIcon.Clicked += (s, e) =>
             {
                 if (IsVisible) Hide();
@@ -80,6 +49,9 @@ namespace BigWhiteDot
                     Activate();
                 }
             };
+
+            // Actually attach it to the app
+            TrayIcon.SetIcons(Application.Current, [_trayIcon]);
         }
         #endregion
 
@@ -143,9 +115,103 @@ namespace BigWhiteDot
         #endregion
 
         #region Routines
+        /// <summary>
+        /// Construct a fresh NativeMenu from recent, favorites, etc.
+        /// </summary>
+        private NativeMenu BuildTrayMenu()
+        {
+            NativeMenu menu = [];
+
+            // Recent submenu
+            NativeMenuItem recentSub = new("Recent")
+            {
+                Menu = []
+            };
+            if (_recent.Count > 0)
+            {
+                foreach (string name in _recent)
+                {
+                    NativeMenuItem item = new(name);
+                    item.Click += (_, __) => LaunchAndRecord(name);
+                    recentSub.Menu.Items.Add(item);
+                }
+            }
+            else
+            {
+                NativeMenuItem empty = new("(no recents yet)")
+                {
+                    IsEnabled = false
+                };
+                recentSub.Menu.Items.Add(empty);
+            }
+            menu.Items.Add(recentSub);
+
+            // Favorites submenu
+            NativeMenuItem favSub = new("Favorites")
+            {
+                Menu = []
+            };
+            Dictionary<string, Shortcut> configs = global::Launcher.Launcher.ReadConfigurations();
+            if (configs.Count > 0)
+            {
+                foreach (KeyValuePair<string, Shortcut> kv in configs)
+                {
+                    string name = kv.Key;
+                    NativeMenuItem item = new(name);
+                    item.Click += (_, __) => LaunchAndRecord(name);
+                    favSub.Menu.Items.Add(item);
+                }
+            }
+            else
+            {
+                NativeMenuItem emptyFav = new("(no favorites)")
+                {
+                    IsEnabled = false
+                };
+                favSub.Menu.Items.Add(emptyFav);
+            }
+            menu.Items.Add(favSub);
+
+            // File System submenu
+            NativeMenuItem fsSub = new("File System")
+            {
+                Menu = []
+            };
+            Dictionary<string, string> folders = new()
+            {
+                ["Desktop"] = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                ["Documents"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                ["Downloads"] = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
+                ["Pictures"] = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+            };
+            foreach (KeyValuePair<string, string> kv in folders)
+            {
+                Bitmap icon = new(AssetLoader.Open(new Uri("avares://BigWhiteDot/Assets/Folder.png")));
+                NativeMenuItem mi = new(kv.Key)
+                {
+                    Icon = icon
+                };
+                mi.Click += (_, __) => LaunchAndRecord(kv.Value, useDefaultProgram: true);
+                fsSub.Menu.Items.Add(mi);
+            }
+            menu.Items.Add(fsSub);
+
+            // EXIT
+            NativeMenuItem exit = new("Exit");
+            exit.Click += (_, __) =>
+            {
+                _reallyClosing = true;
+                Close();
+                if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d)
+                    d.Shutdown();
+            };
+            menu.Items.Add(exit);
+
+            return menu;
+        }
         public void UpdateMenuItems()
         {
-            // RECENT
+            // Recent menu
             RecentMenu.Items.Clear();
             foreach (string name in _recent)
             {
@@ -158,7 +224,7 @@ namespace BigWhiteDot
                     MakeItem("(no recents yet)", () => { })
                 );
 
-            // FAVORITES (all configured shortcuts)
+            // Favorites menu (all configured shortcuts)
             FavoritesMenu.Items.Clear();
             Dictionary<string, Shortcut> configs = global::Launcher.Launcher.ReadConfigurations();
             foreach (KeyValuePair<string, Shortcut> kv in configs)
@@ -173,7 +239,7 @@ namespace BigWhiteDot
                     MakeItem("(no favorites)", () => { })
                 );
 
-            // FILE SYSTEM (hard‑coded common folders + icons)
+            // File System menu (hard‑coded common folders + icons)
             FileSystemMenu.Items.Clear();
             Dictionary<string, string> folders = new()
             {
@@ -184,7 +250,7 @@ namespace BigWhiteDot
             };
             foreach (KeyValuePair<string, string> kv in folders)
             {
-                // Load a folder icon from your Assets (or system) here if you have one:
+                // Load a folder icon
                 Image icon = new() { Source = new Bitmap(AssetLoader.Open(new Uri("avares://BigWhiteDot/Assets/Folder.png"))), Width=16, Height=16 };
                 MenuItem mi = MakeItem(
                     kv.Key,
@@ -225,6 +291,9 @@ namespace BigWhiteDot
             _recent.AddFirst(nameOrPath);
             if (_recent.Count > MaxRecent)
                 _recent.RemoveLast();
+
+            // Refresh the tray menu
+            _trayIcon.Menu = BuildTrayMenu();
         }
         #endregion
 
