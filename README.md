@@ -29,6 +29,7 @@ For using with Visual Studio Code, you probably want to expose `%UserProfile%\Ap
 * v0.1.4: Surpport verbatim paths.
 * v0.1.5: Add `--create` command; Remove `--config`, use `--edit` instead.
 * v0.1.6: Fix issue with parsing folder paths with spaces when opening from explorer.
+* v0.1.7: Create Big White Dot; Refactor core.
 
 ## Dated Notes
 
