@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="BigWhiteDot.MainWindow" SizeToContent="WidthAndHeight"
+        Title="BigWhiteDot" WindowStartupLocation="CenterScreen"
+        Background="Transparent" TransparencyBackgroundFallback="Transparent" TransparencyLevelHint="AcrylicBlur"
+        SystemDecorations="None" ExtendClientAreaToDecorationsHint="True" ExtendClientAreaChromeHints="NoChrome" ExtendClientAreaTitleBarHeightHint="-1"
+        RequestedThemeVariant="Dark" PointerPressed="Window_PointerPressed">
+    <Window.Styles>
+        <!-- Default style: semi‑transparent with a smooth transition -->
+        <Style Selector="Border.dot">
+            <Setter Property="Opacity" Value="0.5"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- When the pointer is anywhere over the Window, make all .dot borders fully opaque -->
+        <Style Selector="Window:pointerover Border.dot">
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+
+    </Window.Styles>
+    <Border Classes="dot" Background="Gray" Width="30" Height="30" CornerRadius="15" PointerPressed="Border_PointerPressed">
+        <Border Classes="dot" Background="White" Width="15" Height="15" CornerRadius="15" Margin="5"/>
+    </Border>
+</Window>

@@ -1,7 +1,5 @@
 # Launcher
 
-THIS CODE IS CROSS-PLATFORM COMPLIANT IN THE SENSE THAT IT DOESN'T USE ANY WINDOWS SPECIFIC API; HOWEVER, IT UTILIZES explorer.exe TO OPEN DISK LOCATIONS WHICH IS ONLY APPLICABLE ON WINDOWS.
-
 Think of this as a self-contained version of Rainmeter gadget designed just for launching stuff.
 This is way faster and non-intrusive than Rainmeter when added to `PATH`.
 You can also think of it as an extended version of "task bar".

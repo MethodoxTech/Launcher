@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherUnitTests", "UnitTests\LauncherUnitTests\LauncherUnitTests.csproj", "{A7911ADF-14DE-49CA-8ECB-C91A4E6D2006}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWhiteDot", "BigWhiteDot\BigWhiteDot.csproj", "{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{A7911ADF-14DE-49CA-8ECB-C91A4E6D2006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7911ADF-14DE-49CA-8ECB-C91A4E6D2006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7911ADF-14DE-49CA-8ECB-C91A4E6D2006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
