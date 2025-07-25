@@ -1,4 +1,4 @@
-# Launcher
+# Launcher & Big White Dot (Unified Versioning)
 
 Think of this as a self-contained version of Rainmeter gadget designed just for launching stuff.
 This is way faster and non-intrusive than Rainmeter when added to `PATH`.
@@ -30,6 +30,7 @@ For using with Visual Studio Code, you probably want to expose `%UserProfile%\Ap
 * v0.1.5: Add `--create` command; Remove `--config`, use `--edit` instead.
 * v0.1.6: Fix issue with parsing folder paths with spaces when opening from explorer.
 * v0.1.7: Create Big White Dot; Refactor core.
+* v0.1.8: (BWD) Hide from Alt+Tab on Windows.
 
 ## Dated Notes
 

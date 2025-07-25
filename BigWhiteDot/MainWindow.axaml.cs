@@ -3,15 +3,47 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Launcher;
+using Avalonia.VisualTree;
 using Launcher.Shared;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace BigWhiteDot
 {
     public partial class MainWindow : Window
     {
+        #region Windows Specific
+        // Win32 constants
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
+        private const int WS_EX_APPWINDOW = 0x00040000;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private void HideFromAltTab()
+        {
+            // Get the Avalonia TopLevel (our native host)
+            if (this.GetVisualRoot() is TopLevel top 
+                // and ask it for its platform handle
+                && top.TryGetPlatformHandle() is IPlatformHandle handle
+                && handle.Handle != IntPtr.Zero)
+            {
+                nint hWnd = handle.Handle;
+                // read current ex‑style
+                int ex = GetWindowLong(hWnd, GWL_EXSTYLE);
+                // add WS_EX_TOOLWINDOW, remove WS_EX_APPWINDOW
+                ex |= WS_EX_TOOLWINDOW;
+                ex &= ~WS_EX_APPWINDOW;
+                SetWindowLong(hWnd, GWL_EXSTYLE, ex);
+            }
+        }
+        #endregion
+
         #region Construction
         public MainWindow()
         {
@@ -20,6 +52,8 @@ namespace BigWhiteDot
 
             Topmost = true;
 
+            // Wait until native window exists
+            Opened += (_, __) => HideFromAltTab();
             Closing += (_, e) =>
             {
                 if (!_reallyClosing)
