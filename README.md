@@ -15,10 +15,16 @@ For using with Visual Studio Code, you probably want to expose `%UserProfile%\Ap
 
 ## TODO
 
+Setup:
+
 - [ ] Support comments on link items (not urgent).
 - [ ] Support in-place arguments on link items (aka. so we don't always need to take from CLI use) (not urgent); This is non-trivial architectural change and may complicate code.
 - [ ] (CLI, GUI) Add simple `--interactive/-i` mode which allows picking targets interactively. Occassionally useful when we are lazy. It should be a TUI-like interface.
 - [ ] Add unit test to test parsing of various file paths
+
+Publication:
+
+- [ ] Platform safeguard: (LC) launch with default, (BWD) Alt+Tab
 
 ## Version Changelog
 

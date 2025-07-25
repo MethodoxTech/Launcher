@@ -309,14 +309,14 @@ namespace BigWhiteDot
             {
                 if (LauncherCore.ReadConfigurations().ContainsKey(nameOrPath))
                     // Treat as shortcut name
-                    LauncherCore.Launch(nameOrPath, args ?? Array.Empty<string>(), useDefaultProgram);
+                    LauncherCore.Launch(nameOrPath, args ?? [], useDefaultProgram);
                 else
                     // Treat as literal path/url
                     nameOrPath.Launch(args ?? Array.Empty<string>(), useDefaultProgram);
             }
             catch (Exception ex)
             {
-                // you can show a Toast or dialog here if you want
+                // Remark: you can show a Toast or dialog here if you want
                 Console.WriteLine(ex.Message);
                 return;
             }
