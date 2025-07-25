@@ -31,6 +31,7 @@
                 <MenuItem Header="Favorites" Name="FavoritesMenu"/>
                 <MenuItem Header="File System" Name="FileSystemMenu"/>
                 <MenuItem Header="Everything" IsVisible="False" Name="EverythingMenu"/>
+                <MenuItem Header="Hide" Click="HideMenuItem_Click"/>
                 <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
             </ContextMenu>
         </Border.ContextMenu>

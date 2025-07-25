@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Launcher;
@@ -13,12 +15,77 @@ namespace BigWhiteDot
         public MainWindow()
         {
             InitializeComponent();
+            InitializeTrayIcon();
 
             Topmost = true;
+
+            Closing += (_, e) =>
+            {
+                if (!_reallyClosing)
+                {
+                    e.Cancel = true;
+                    Hide();
+                }
+            };
+        }
+        private void InitializeTrayIcon()
+        {
+            _trayIcon = new TrayIcon
+            {
+                Icon = new WindowIcon(new Bitmap(AssetLoader.Open(new Uri("avares://BigWhiteDot/Assets/Icon.ico")))),
+                ToolTipText = "Show Big White Dot",
+            };
+
+            // Build a native menu
+            NativeMenu menu = [];
+
+            // "Recent" submenu
+            NativeMenuItem recentSub = new("Recent") { Menu = [] };
+            // Example: populate with a couple of dummy entries
+            foreach (string? name in new[] { "Foo", "Bar" })
+            {
+                NativeMenuItem item = new(name);
+                item.Click += (s, e) =>
+                {
+                    // your LaunchAndRecord(name) logic here
+                    Console.WriteLine($"Launch {name}");
+                };
+                recentSub.Menu.Items.Add(item);
+            }
+            menu.Items.Add(recentSub);
+
+            // "Exit"
+            NativeMenuItem exitItem = new("Exit");
+            exitItem.Click += (s, e) =>
+            {
+                // allow the window to really close, then shut down
+                _reallyClosing = true;
+                Close();
+                if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d)
+                    d.Shutdown();
+            };
+            menu.Items.Add(exitItem);
+
+            // Wire it up
+            _trayIcon.Menu = menu;
+            TrayIcon.SetIcons(Application.Current, [_trayIcon]);
+
+            // Click‑to‑toggle visibility
+            _trayIcon.Clicked += (s, e) =>
+            {
+                if (IsVisible) Hide();
+                else
+                {
+                    Show();
+                    Activate();
+                }
+            };
         }
         #endregion
 
         #region Properties
+        private TrayIcon _trayIcon;
+        private bool _reallyClosing;
         /// <summary>
         /// Keep up most‑recent shortcuts
         /// </summary>
@@ -61,10 +128,18 @@ namespace BigWhiteDot
             // Launch edit
             global::Launcher.Launcher.ConfigurationPath.OpenWithDefaultProgram(null);
         }
+        private void HideMenuItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+            => Hide();
         private void ExitMenuItem_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            Close();
+            // Allow the window to actually close, then shut down:
+            _reallyClosing = true;
+            this.Close();
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)
+                ?.Shutdown();
         }
+        private void Window_Closed(object? sender, System.EventArgs e)
+            => _trayIcon?.Dispose();
         #endregion
 
         #region Routines
