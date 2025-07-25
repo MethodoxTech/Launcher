@@ -5,7 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="BigWhiteDot.MainWindow" SizeToContent="WidthAndHeight"
         Title="BigWhiteDot" WindowStartupLocation="CenterScreen"
-        Background="Transparent" TransparencyBackgroundFallback="Transparent" TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent" TransparencyBackgroundFallback="Transparent" TransparencyLevelHint="None"
         SystemDecorations="None" ExtendClientAreaToDecorationsHint="False" ExtendClientAreaChromeHints="NoChrome" ExtendClientAreaTitleBarHeightHint="-1"
         RequestedThemeVariant="Dark" PointerPressed="Window_PointerPressed" ShowInTaskbar="False" Closed="Window_Closed">
     <Window.Styles>
