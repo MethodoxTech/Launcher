@@ -11,6 +11,7 @@ Remove-Item $PublishFolder -Recurse -Force
 # Publish Executables
 $PublishExecutables = @(
     "Launcher\Launcher.csproj"
+    "BigWhiteDot\BigWhiteDot.csproj"
 )
 foreach ($Item in $PublishExecutables)
 {
