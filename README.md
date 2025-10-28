@@ -26,7 +26,13 @@ Publication:
 
 - [ ] Platform safeguard: (LC) launch with default, (BWD) Alt+Tab
 
+# Publishing
+
+Use `PowerShell/Publish.ps1` script.
+
 ## Version Changelog
+
+The versioning applies to both BWD and Launcher program.
 
 * v0.1.0: Functional release.
 * v0.1.1: Add `--print`.
@@ -37,6 +43,7 @@ Publication:
 * v0.1.6: Fix issue with parsing folder paths with spaces when opening from explorer.
 * v0.1.7: Create Big White Dot; Refactor core.
 * v0.1.8: (BWD) Hide from Alt+Tab on Windows; Fix background.
+* v0.1.9: Use a default working directory when launching exe directly.
 
 ## Dated Notes
 

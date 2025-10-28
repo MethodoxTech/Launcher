@@ -65,7 +65,15 @@ namespace Launcher.Shared
             {
                 case ShortcutType.Executable:
                     // Launch exe
-                    Process.Start(path, additionalArgs);
+                    string workingDir = Path.GetDirectoryName(Path.GetFullPath(path));
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = path,
+                        Arguments = string.Join(" ", additionalArgs),
+                        WorkingDirectory = workingDir,
+                        UseShellExecute = false
+                    };
+                    Process.Start(psi);
                     break;
                 case ShortcutType.DiskLocation:
                     if (launchWithDefaultProgram)
