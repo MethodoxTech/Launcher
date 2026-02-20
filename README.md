@@ -44,6 +44,7 @@ The versioning applies to both BWD and Launcher program.
 * v0.1.7: Create Big White Dot; Refactor core.
 * v0.1.8: (BWD) Hide from Alt+Tab on Windows; Fix background.
 * v0.1.9: Use a default working directory when launching exe directly.
+* v0.2.0: Upgrade to .Net 10.
 
 ## Dated Notes
 

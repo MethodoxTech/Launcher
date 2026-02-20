@@ -7,7 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <Version>0.1.9</Version>
+    <Version>0.2.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Folder.png" />
