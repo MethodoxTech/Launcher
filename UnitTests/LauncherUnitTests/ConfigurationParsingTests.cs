@@ -1,3 +1,4 @@
+using Divooka.Core.Helpers;
 using Launcher.Shared;
 
 namespace LauncherUnitTests
@@ -7,8 +8,8 @@ namespace LauncherUnitTests
         [Fact]
         public void ShouldBeAbleToRecognizeVariousPatterns()
         {
-            Assert.Equal(ShortcutType.Verbatim, LauncherCore.ParseShortcut(@"workspace: !code ""C:\My Folder\My Subfolder""").Type);
-            Assert.Equal(ShortcutType.DiskLocation, LauncherCore.ParseShortcut(@"folder: C:\My Folder\My Subfolder").Type);
+            Assert.Equal(LaunchType.Verbatim, LauncherCore.ParseShortcut(@"workspace: !code ""C:\My Folder\My Subfolder""").Type);
+            Assert.Equal(LaunchType.DiskLocation, LauncherCore.ParseShortcut(@"folder: C:\My Folder\My Subfolder").Type);
         }
     }
 }

@@ -1,6 +1,5 @@
-﻿using ConsoleTables;
+﻿using Divooka.Core.Helpers;
 using Launcher.Shared;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Launcher
@@ -54,7 +53,7 @@ namespace Launcher
                 else
                 {
                     string name = args.Last();
-                    Shortcut item = LauncherCore.ReadConfigurations().Values
+                    LaunchOption item = LauncherCore.ReadConfigurations().Values
                         .SingleOrDefault(item => item.Name == name);
                     if (item == null)
                         Console.WriteLine($"{name} is not defined.");

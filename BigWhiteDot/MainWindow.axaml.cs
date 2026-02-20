@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.VisualTree;
+using Divooka.Core.Helpers;
 using Launcher.Shared;
 using System;
 using System.Collections.Generic;
@@ -186,10 +187,10 @@ namespace BigWhiteDot
             {
                 Menu = []
             };
-            Dictionary<string, Shortcut> configs = LauncherCore.ReadConfigurations();
+            Dictionary<string, LaunchOption> configs = LauncherCore.ReadConfigurations();
             if (configs.Count > 0)
             {
-                foreach (KeyValuePair<string, Shortcut> kv in configs)
+                foreach (KeyValuePair<string, LaunchOption> kv in configs)
                 {
                     string name = kv.Key;
                     NativeMenuItem item = new(name);
@@ -261,8 +262,8 @@ namespace BigWhiteDot
 
             // Favorites menu (all configured shortcuts)
             FavoritesMenu.Items.Clear();
-            Dictionary<string, Shortcut> configs = LauncherCore.ReadConfigurations();
-            foreach (KeyValuePair<string, Shortcut> kv in configs)
+            Dictionary<string, LaunchOption> configs = LauncherCore.ReadConfigurations();
+            foreach (KeyValuePair<string, LaunchOption> kv in configs)
             {
                 string name = kv.Key;
                 FavoritesMenu.Items.Add(

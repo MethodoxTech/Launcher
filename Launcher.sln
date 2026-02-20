@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.8.34309.116
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11512.155 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "Launcher\Launcher.csproj", "{80B41421-B3FC-433C-B9EB-0F97DD4E2988}"
 EndProject
@@ -15,6 +15,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWhiteDot", "BigWhiteDot\BigWhiteDot.csproj", "{BE81ABCE-0F8D-4422-AFF0-23E1193E5B01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher.Shared", "Launcher.Shared\Launcher.Shared.csproj", "{A3539990-AD77-4C11-BDC4-5C21C0584590}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Parcel NExT", "Parcel NExT", "{90E064E7-3ED1-4BE9-A674-45C46DE191EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParcelNExT.Windows.Helpers", "..\..\Standalones\SetMyWallpaper\FoundationalLibraries\ParcelNExT.Windows.Helpers\ParcelNExT.Windows.Helpers.csproj", "{A21BD124-7211-77EA-7DBE-A05DA6153C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divooka.Core", "..\..\Parcel.NExT\CoreEngines\Divooka.Core\Divooka.Core.csproj", "{44C516FC-3A75-895F-9B80-5E1D8290572D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +44,21 @@ Global
 		{A3539990-AD77-4C11-BDC4-5C21C0584590}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3539990-AD77-4C11-BDC4-5C21C0584590}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3539990-AD77-4C11-BDC4-5C21C0584590}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21BD124-7211-77EA-7DBE-A05DA6153C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21BD124-7211-77EA-7DBE-A05DA6153C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21BD124-7211-77EA-7DBE-A05DA6153C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21BD124-7211-77EA-7DBE-A05DA6153C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C516FC-3A75-895F-9B80-5E1D8290572D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C516FC-3A75-895F-9B80-5E1D8290572D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C516FC-3A75-895F-9B80-5E1D8290572D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C516FC-3A75-895F-9B80-5E1D8290572D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A21BD124-7211-77EA-7DBE-A05DA6153C07} = {90E064E7-3ED1-4BE9-A674-45C46DE191EF}
+		{44C516FC-3A75-895F-9B80-5E1D8290572D} = {90E064E7-3ED1-4BE9-A674-45C46DE191EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D08E7EC-DDE9-4E08-BF13-9DA8A89C3928}
